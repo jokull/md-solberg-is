@@ -27,9 +27,23 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Apply to all routes (belt-and-suspenders for paths that bypass middleware)
+        // Apply to all routes (belt-and-suspenders for paths that bypass proxy)
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        // CDN caching for gist pages (20-char or 32-char hex IDs)
+        source: "/:user/:gistId([a-f0-9]{20,32})",
+        headers: [
+          {
+            key: "Vercel-CDN-Cache-Control",
+            value: "public, s-maxage=86400, stale-while-revalidate=86400",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
+          },
+        ],
       },
     ];
   },
