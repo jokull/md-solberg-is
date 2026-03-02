@@ -259,11 +259,62 @@ summary {
 }
 
 /* Tables */
+@property --fade-left {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-right {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.markdown-body .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+/* Fade edges while scrolling — progressive enhancement */
+@supports (animation-timeline: scroll()) {
+  .markdown-body .table-scroll {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black var(--fade-left),
+      black calc(100% - var(--fade-right)),
+      transparent
+    );
+    animation: table-scroll-fade linear;
+    animation-timeline: scroll(self inline);
+  }
+}
+
+@keyframes table-scroll-fade {
+  0% {
+    --fade-left: 0px;
+    --fade-right: 2rem;
+  }
+  4% {
+    --fade-left: 2rem;
+    --fade-right: 2rem;
+  }
+  96% {
+    --fade-left: 2rem;
+    --fade-right: 2rem;
+  }
+  100% {
+    --fade-left: 2rem;
+    --fade-right: 0px;
+  }
+}
+
 .markdown-body table {
   border-collapse: collapse;
   width: 100%;
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
   font-size: calc(var(--md-prose-size) - 0.0625rem);
 }
 
@@ -272,6 +323,8 @@ summary {
   padding: 0.5rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--color-neutral-200);
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .markdown-body th:first-child,
@@ -285,13 +338,15 @@ summary {
 }
 
 .markdown-body th {
+  white-space: nowrap;
   font-weight: 600;
   color: var(--color-neutral-950);
   border-bottom-color: var(--color-neutral-300);
 }
 
 /* Hide last-row border when table is directly followed by an hr */
-.markdown-body table:has(+ hr) tr:last-child td {
+.markdown-body table:has(+ hr) tr:last-child td,
+.markdown-body .table-scroll:has(+ hr) tr:last-child td {
   border-bottom: none;
 }
 

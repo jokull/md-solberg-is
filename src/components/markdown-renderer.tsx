@@ -5,6 +5,7 @@ import {
   isPlainObject,
 } from "@/components/renderers/structured-data-primitives";
 import { rehypeExtractToc } from "@/lib/rehype-extract-toc";
+import { rehypeWrapTables } from "@/lib/rehype-wrap-tables";
 import type { TocEntry } from "@/lib/toc";
 import rehypeShiki from "@shikijs/rehype";
 import matter from "gray-matter";
@@ -140,6 +141,7 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
       },
     })
     .use(rehypeSanitize, sanitizeSchema)
+    .use(rehypeWrapTables)
     .use(rehypeExtractToc(headings))
     .use(rehypeShiki, {
       themes: {
