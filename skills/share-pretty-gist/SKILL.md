@@ -91,7 +91,7 @@ Show gists.sh as the primary shareable link:
 When updating a gist that was previously shared:
 
 1. Edit the gist with `gh gist edit {id}`
-2. POST to the refresh endpoint to bust stale cache (1-minute cooldown between refreshes):
+2. POST to the refresh endpoint to bust stale cache. There is a 1-minute cooldown between purge requests:
    ```bash
    curl -s -X POST https://gists.sh/{user}/{id}/refresh
    ```

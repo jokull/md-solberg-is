@@ -57,7 +57,7 @@ Single-key shortcuts work when no input is focused:
 - \`L\` - Copy gists.sh link
 - \`G\` - Copy original GitHub URL
 - \`O\` - Open original gist on GitHub
-- \`R\` - Refresh gist (bust cache and reload)
+- \`R\` - Reload the latest cached gist, purging when allowed
 
 ## Raw content API
 

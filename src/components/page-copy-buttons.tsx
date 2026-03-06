@@ -99,9 +99,8 @@ export function PageCopyButtons({
         router.refresh();
         toast.success("Gist refreshed", { id: toastId });
       } else if (res.status === 429) {
-        toast.error("Please wait a minute before refreshing again", {
-          id: toastId,
-        });
+        router.refresh();
+        toast.success("Loaded latest cached gist", { id: toastId });
       } else {
         toast.error("Failed to refresh gist", { id: toastId });
       }

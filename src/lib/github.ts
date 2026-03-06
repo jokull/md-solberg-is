@@ -35,9 +35,7 @@ export interface GitHubUser {
   location: string | null;
 }
 
-export async function fetchUser(username: string): Promise<GitHubUser | null> {
-  if (!isValidUsername(username)) return null;
-
+function getGitHubHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",
   };
@@ -46,9 +44,15 @@ export async function fetchUser(username: string): Promise<GitHubUser | null> {
     headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
 
+  return headers;
+}
+
+export async function fetchUser(username: string): Promise<GitHubUser | null> {
+  if (!isValidUsername(username)) return null;
+
   try {
     const res = await fetch(`https://api.github.com/users/${username}`, {
-      headers,
+      headers: getGitHubHeaders(),
       next: { revalidate: 86400 },
     });
 
@@ -77,16 +81,8 @@ export function isValidUsername(username: string): boolean {
 export async function fetchGist(gistId: string): Promise<Gist | null> {
   if (!isValidGistId(gistId)) return null;
 
-  const headers: Record<string, string> = {
-    Accept: "application/vnd.github.v3+json",
-  };
-
-  if (process.env.GITHUB_TOKEN) {
-    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-  }
-
   const res = await fetch(`https://api.github.com/gists/${gistId}`, {
-    headers,
+    headers: getGitHubHeaders(),
     // Tag enables on-demand purge via POST /{user}/{gistId}/refresh
     next: { revalidate: 86400, tags: [`gist-${gistId}`] },
   });
