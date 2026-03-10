@@ -18,10 +18,11 @@
 	"dependencies": {
 		"@radix-ui/react-dropdown-menu": "^2.1.16",
 		"@radix-ui/react-tooltip": "^1.2.8",
+		"@shikijs/langs": "^4.0.2",
 		"@shikijs/rehype": "^3.23.0",
+		"@shikijs/themes": "^4.0.2",
 		"@types/hast": "^3.0.4",
 		"clsx": "^2.1.1",
-		"gray-matter": "^4.0.3",
 		"hast-util-heading-rank": "^3.0.0",
 		"hast-util-to-string": "^3.0.1",
 		"ical.js": "^2.2.1",

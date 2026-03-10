@@ -38,10 +38,12 @@ export interface GitHubUser {
 function getGitHubHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",
+    "User-Agent": "gists-sh",
   };
 
-  if (process.env.GITHUB_TOKEN) {
-    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  const token = process.env.GITHUB_TOKEN;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
   return headers;
@@ -68,8 +70,7 @@ const GIST_ID_RE = /^[a-f0-9]+$/;
 const USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
 
 export function isValidGistId(id: string): boolean {
-  if (!GIST_ID_RE.test(id)) return false;
-  return id.length === 20 || id.length === 32;
+  return GIST_ID_RE.test(id) && id.length >= 1 && id.length <= 32;
 }
 
 export function isValidUsername(username: string): boolean {
@@ -83,7 +84,6 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
 
   const res = await fetch(`https://api.github.com/gists/${gistId}`, {
     headers: getGitHubHeaders(),
-    cache: "no-store",
   });
 
   if (res.status === 404) return null;

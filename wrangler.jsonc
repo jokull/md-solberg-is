@@ -5,9 +5,9 @@
 	"compatibility_flags": ["nodejs_compat"],
 	"main": "./worker/index.ts",
 	"vars": {
-		"SITE_URL": "https://gists.sh"
+		"SITE_URL": "https://md.solberg.is"
 	},
-	"routes": [{ "pattern": "gists.sh", "custom_domain": true }],
+	"routes": [{ "pattern": "md.solberg.is", "custom_domain": true }],
 	"assets": {
 		"not_found_handling": "none",
 		"directory": "dist/client"

@@ -20,7 +20,7 @@ import {
   isYAML,
 } from "@/lib/github";
 import { getShikiLang, highlightCode } from "@/lib/shiki";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/lib/frontmatter";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
@@ -60,7 +60,7 @@ export async function generateMetadata({
   // Strip frontmatter before generating preview
   const contentForPreview =
     firstFile?.content && isMarkdown(firstFile.filename)
-      ? matter(firstFile.content).content
+      ? parseFrontmatter(firstFile.content).content
       : firstFile?.content;
   const rawPreview = contentForPreview
     ? contentForPreview
