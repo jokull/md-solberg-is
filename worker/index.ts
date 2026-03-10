@@ -8,18 +8,14 @@
  * Cloudflare's Cache API doesn't support Vary headers, so we strip
  * them and use a cache key based on the URL only.
  */
-import { KVCacheHandler } from "vinext/cloudflare";
-import { setCacheHandler } from "vinext/shims/cache";
 import handler from "vinext/server/app-router-entry";
 
 interface Env {
-  VINEXT_CACHE: KVNamespace;
   [key: string]: unknown;
 }
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    setCacheHandler(new KVCacheHandler(env.VINEXT_CACHE));
     for (const [key, value] of Object.entries(env)) {
       if (typeof value === "string") {
         process.env[key] = value;

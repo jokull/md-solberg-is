@@ -63,9 +63,6 @@ function getGitHubHeaders(): Record<string, string> {
   return headers;
 }
 
-// KV-backed GitHub API cache with ETag support.
-// On cache hit, sends If-None-Match to GitHub. A 304 means the cached
-// data is still fresh (and doesn't count against rate limits).
 // Cache GitHub API responses using the Cloudflare Cache API with ETags.
 // On cache hit, sends If-None-Match; a 304 means data is fresh (free).
 // Falls back to direct fetch when Cache API isn't available (dev).
