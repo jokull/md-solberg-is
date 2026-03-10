@@ -13,50 +13,51 @@ import { setCacheHandler } from "vinext/shims/cache";
 import handler from "vinext/server/app-router-entry";
 
 interface Env {
-	VINEXT_CACHE: KVNamespace;
-	[key: string]: unknown;
+  VINEXT_CACHE: KVNamespace;
+  [key: string]: unknown;
 }
 
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		setCacheHandler(new KVCacheHandler(env.VINEXT_CACHE));
-		for (const [key, value] of Object.entries(env)) {
-			if (typeof value === "string") {
-				process.env[key] = value;
-			}
-		}
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    setCacheHandler(new KVCacheHandler(env.VINEXT_CACHE));
+    for (const [key, value] of Object.entries(env)) {
+      if (typeof value === "string") {
+        process.env[key] = value;
+      }
+    }
 
-		// Only cache GET/HEAD HTML requests (not RSC or API)
-		const isRSC = request.headers.get("rsc") === "1" ||
-			request.headers.get("accept")?.includes("text/x-component");
-		if (request.method !== "GET" || isRSC) {
-			return handler.fetch(request);
-		}
+    // Only cache GET/HEAD HTML requests (not RSC or API)
+    const isRSC =
+      request.headers.get("rsc") === "1" ||
+      request.headers.get("accept")?.includes("text/x-component");
+    if (request.method !== "GET" || isRSC) {
+      return handler.fetch(request);
+    }
 
-		// Use a simplified cache key (URL only, no Vary)
-		const cacheKey = new Request(request.url, { method: "GET" });
-		const cache = caches.default;
-		const cached = await cache.match(cacheKey);
-		if (cached) {
-			return cached;
-		}
+    // Use a simplified cache key (URL only, no Vary)
+    const cacheKey = new Request(request.url, { method: "GET" });
+    const cache = caches.default;
+    const cached = await cache.match(cacheKey);
+    if (cached) {
+      return cached;
+    }
 
-		const response = await handler.fetch(request);
+    const response = await handler.fetch(request);
 
-		// Cache responses that have s-maxage (set by revalidate config)
-		const cacheControl = response.headers.get("cache-control");
-		if (cacheControl?.includes("s-maxage")) {
-			// Clone and strip Vary header — CF Cache API rejects Vary: *
-			// and doesn't handle custom Vary values well
-			const headers = new Headers(response.headers);
-			headers.delete("vary");
-			const cacheable = new Response(response.clone().body, {
-				status: response.status,
-				headers,
-			});
-			ctx.waitUntil(cache.put(cacheKey, cacheable));
-		}
+    // Cache responses that have s-maxage (set by revalidate config)
+    const cacheControl = response.headers.get("cache-control");
+    if (cacheControl?.includes("s-maxage")) {
+      // Clone and strip Vary header — CF Cache API rejects Vary: *
+      // and doesn't handle custom Vary values well
+      const headers = new Headers(response.headers);
+      headers.delete("vary");
+      const cacheable = new Response(response.clone().body, {
+        status: response.status,
+        headers,
+      });
+      ctx.waitUntil(cache.put(cacheKey, cacheable));
+    }
 
-		return response;
-	},
+    return response;
+  },
 };

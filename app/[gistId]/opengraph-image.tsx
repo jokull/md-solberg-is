@@ -9,11 +9,7 @@ export const contentType = "image/png";
 
 const USERNAME = "jokull";
 
-export default async function Image({
-  params,
-}: {
-  params: Promise<{ gistId: string }>;
-}) {
+export default async function Image({ params }: { params: Promise<{ gistId: string }> }) {
   const { gistId } = await params;
 
   const fontsDir = join(process.cwd(), "public/fonts");
@@ -31,9 +27,7 @@ export default async function Image({
   // Show all filenames, trimmed to fit
   const allFilenames = files.map((f) => f.filename).join(", ");
   const filenamesDisplay =
-    allFilenames.length > 60
-      ? allFilenames.slice(0, 57) + "..."
-      : allFilenames;
+    allFilenames.length > 60 ? allFilenames.slice(0, 57) + "..." : allFilenames;
   const filename = filenamesDisplay || firstFile?.filename || "Untitled";
 
   return new ImageResponse(

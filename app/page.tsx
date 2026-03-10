@@ -26,19 +26,14 @@ function GistCard({ gist }: { gist: GistSummary }) {
   const title = gist.description || firstFile?.filename || "Untitled";
 
   return (
-    <Link
-      href={`/${gist.id}`}
-      className="group block py-4 -mx-1 px-1 rounded-md transition-colors"
-    >
+    <Link href={`/${gist.id}`} className="group block py-4 -mx-1 px-1 rounded-md transition-colors">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-medium text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-950 dark:group-hover:text-white transition-colors truncate">
             {title}
           </h2>
           <div className="mt-1 flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-500">
-            <span className="font-mono truncate">
-              {files.map((f) => f.filename).join(", ")}
-            </span>
+            <span className="font-mono truncate">{files.map((f) => f.filename).join(", ")}</span>
             {files.length > 1 && (
               <span className="shrink-0 text-neutral-400 dark:text-neutral-600">
                 {files.length} files
@@ -55,10 +50,7 @@ function GistCard({ gist }: { gist: GistSummary }) {
 }
 
 export default async function Home() {
-  const [gists, user] = await Promise.all([
-    fetchUserGists(USERNAME, 1, 100),
-    fetchUser(USERNAME),
-  ]);
+  const [gists, user] = await Promise.all([fetchUserGists(USERNAME, 1, 100), fetchUser(USERNAME)]);
 
   const displayName = user?.name || USERNAME;
 
@@ -81,9 +73,7 @@ export default async function Home() {
               {displayName}
             </h1>
             {user?.bio && (
-              <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-0.5">
-                {user.bio}
-              </p>
+              <p className="text-xs text-neutral-500 dark:text-neutral-500 mt-0.5">{user.bio}</p>
             )}
           </div>
         </div>

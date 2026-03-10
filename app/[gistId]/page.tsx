@@ -44,9 +44,7 @@ interface PageProps {
 const fetchGistCached = cache(async (gistId: string) => fetchGist(gistId));
 const fetchUserCached = cache(async (username: string) => fetchUser(username));
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { gistId } = await params;
   const gist = await fetchGistCached(gistId);
 
@@ -67,7 +65,7 @@ export async function generateMetadata({
   const rawPreview = contentForPreview
     ? contentForPreview
         .replace(/^#+\s+/gm, "") // strip markdown headings
-        .replace(/[*_`~\[\]]/g, "") // strip markdown formatting
+        .replace(/[*_`~[\]]/g, "") // strip markdown formatting
         .replace(/\s+/g, " ") // collapse whitespace
         .trim()
     : "";
@@ -112,10 +110,7 @@ async function renderFileContent(file: GistFile) {
   }
 
   if (isStructuredData(filename)) {
-    const rawHtml = await highlightCode(
-      content,
-      getShikiLang(filename, language),
-    );
+    const rawHtml = await highlightCode(content, getShikiLang(filename, language));
 
     if (isJSON(filename)) {
       return (
@@ -155,9 +150,7 @@ async function renderFileContent(file: GistFile) {
     );
   }
 
-  return (
-    <CodeRenderer content={content} filename={filename} language={language} />
-  );
+  return <CodeRenderer content={content} filename={filename} language={language} />;
 }
 
 export default async function GistPage({ params }: PageProps) {

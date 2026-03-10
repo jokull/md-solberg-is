@@ -66,17 +66,11 @@ function getGitHubHeaders(): Record<string, string> {
 // KV-backed GitHub API cache with ETag support.
 // On cache hit, sends If-None-Match to GitHub. A 304 means the cached
 // data is still fresh (and doesn't count against rate limits).
-//
-// Uses cloudflare:workers to access KV bindings directly in server
-// components — no need to pass bindings through the worker entry.
-
 // Cache GitHub API responses using the Cloudflare Cache API with ETags.
 // On cache hit, sends If-None-Match; a 304 means data is fresh (free).
 // Falls back to direct fetch when Cache API isn't available (dev).
 
-async function cachedFetch<T>(
-  url: string,
-): Promise<T | null> {
+async function cachedFetch<T>(url: string): Promise<T | null> {
   const headers = getGitHubHeaders();
 
   // Try CF Cache API for stored response
@@ -110,9 +104,7 @@ async function cachedFetch<T>(
     const remaining = res.headers.get("x-ratelimit-remaining");
     if (remaining === "0") {
       if (cachedResponse) return cachedResponse.json() as Promise<T>;
-      throw new Error(
-        "GitHub API rate limit exceeded. Please try again later.",
-      );
+      throw new Error("GitHub API rate limit exceeded. Please try again later.");
     }
   }
 
@@ -149,9 +141,7 @@ export async function fetchUser(username: string): Promise<GitHubUser | null> {
   if (!isValidUsername(username)) return null;
 
   try {
-    return await cachedFetch<GitHubUser>(
-      `https://api.github.com/users/${username}`,
-    );
+    return await cachedFetch<GitHubUser>(`https://api.github.com/users/${username}`);
   } catch {
     return null;
   }
@@ -165,17 +155,13 @@ export function isValidGistId(id: string): boolean {
 }
 
 export function isValidUsername(username: string): boolean {
-  return (
-    username.length >= 1 && username.length <= 39 && USERNAME_RE.test(username)
-  );
+  return username.length >= 1 && username.length <= 39 && USERNAME_RE.test(username);
 }
 
 export async function fetchGist(gistId: string): Promise<Gist | null> {
   if (!isValidGistId(gistId)) return null;
 
-  return cachedFetch<Gist>(
-    `https://api.github.com/gists/${gistId}`,
-  );
+  return cachedFetch<Gist>(`https://api.github.com/gists/${gistId}`);
 }
 
 export async function fetchUserGists(

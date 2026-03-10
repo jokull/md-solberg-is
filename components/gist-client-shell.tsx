@@ -46,10 +46,8 @@ export function GistClientShell({
   const hideFooter = searchParams.has("nofooter");
   const monoMode = searchParams.has("mono");
 
-  const activeFilename =
-    fileParam && filenames.includes(fileParam) ? fileParam : filenames[0];
-  const activeData =
-    fileData.find((f) => f.filename === activeFilename) || fileData[0];
+  const activeFilename = fileParam && filenames.includes(fileParam) ? fileParam : filenames[0];
+  const activeData = fileData.find((f) => f.filename === activeFilename) || fileData[0];
 
   const childArray = Children.toArray(children);
 
@@ -85,11 +83,7 @@ export function GistClientShell({
         )}
 
         {/* File tabs */}
-        <FileTabs
-          filenames={filenames}
-          activeFile={activeFilename}
-          gistId={gistId}
-        />
+        <FileTabs filenames={filenames} activeFile={activeFilename} gistId={gistId} />
 
         {/* Content */}
         <CodeBlockEnhancer>
@@ -97,14 +91,9 @@ export function GistClientShell({
             id="gist-content"
             className={`flex-1 flex flex-col${filenames.length > 1 ? " mt-6 after-tabs" : ""}`}
           >
-            <p className="sr-only">
-              For the full content of this gist, refer to {gistHtmlUrl}
-            </p>
+            <p className="sr-only">For the full content of this gist, refer to {gistHtmlUrl}</p>
             {childArray.map((child, i) => (
-              <div
-                key={filenames[i]}
-                className={filenames[i] === activeFilename ? "" : "hidden"}
-              >
+              <div key={filenames[i]} className={filenames[i] === activeFilename ? "" : "hidden"}>
                 {child}
               </div>
             ))}
@@ -117,11 +106,7 @@ export function GistClientShell({
         {/* Footer */}
         {!hideFooter && (
           <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
-            <Text
-              variant="meta"
-              as="div"
-              className="flex items-center justify-between"
-            >
+            <Text variant="meta" as="div" className="flex items-center justify-between">
               <a
                 href={gistHtmlUrl}
                 target="_blank"

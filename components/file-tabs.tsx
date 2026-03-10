@@ -9,11 +9,7 @@ interface FileTabsProps {
   gistId: string;
 }
 
-export function FileTabs({
-  filenames,
-  activeFile,
-  gistId,
-}: FileTabsProps) {
+export function FileTabs({ filenames, activeFile, gistId }: FileTabsProps) {
   const searchParams = useSearchParams();
 
   const handleTabClick = useCallback(

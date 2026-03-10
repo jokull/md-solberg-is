@@ -2,15 +2,7 @@
 
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import {
-  Check,
-  Copy,
-  Download,
-  ExternalLink,
-  Files,
-  Link,
-  RotateCw,
-} from "lucide-react";
+import { Check, Copy, Download, ExternalLink, Files, Link, RotateCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
@@ -160,8 +152,7 @@ export function PageCopyButtons({
   const triggerClass =
     "p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors outline-none";
 
-  const shortcutClass =
-    "text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4";
+  const shortcutClass = "text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4";
 
   return (
     <div className="flex items-center ml-3 -mt-1 -mr-1 shrink-0">
