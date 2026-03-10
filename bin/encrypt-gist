@@ -1,0 +1,102 @@
+#!/usr/bin/env bun
+//
+// Encrypt a file and create a secret GitHub Gist.
+// The decryption key lives only in the URL fragment (never sent to the server).
+//
+// Usage:
+//   bin/encrypt-gist <file> [-d "description"]
+//   bin/encrypt-gist notes.md -d "Private meeting notes"
+//   echo "secret stuff" | bin/encrypt-gist --stdin secret.md -d "Secrets"
+//
+// Requires: gh (GitHub CLI), authenticated
+
+import { encrypt, generateKey, type EncryptedPayload } from "../lib/crypto.ts";
+import { parseArgs } from "util";
+
+const SITE_URL = "md.solberg.is";
+
+const { values, positionals } = parseArgs({
+  args: Bun.argv.slice(2),
+  options: {
+    description: { type: "string", short: "d", default: "" },
+    stdin: { type: "boolean", default: false },
+  },
+  allowPositionals: true,
+  strict: true,
+});
+
+const filename = positionals[0];
+if (!filename) {
+  console.error("Usage: bin/encrypt-gist <file> [-d description]");
+  console.error("       echo 'text' | bin/encrypt-gist --stdin <name.ext> [-d description]");
+  process.exit(1);
+}
+
+// Read content from file or stdin
+let content: string;
+if (values.stdin) {
+  content = await Bun.stdin.text();
+} else {
+  const file = Bun.file(filename);
+  if (!(await file.exists())) {
+    console.error(`File not found: ${filename}`);
+    process.exit(1);
+  }
+  content = await file.text();
+}
+
+if (!content.trim()) {
+  console.error("Error: empty content");
+  process.exit(1);
+}
+
+// Encrypt
+const { key, raw: keyString } = await generateKey();
+const payload: EncryptedPayload = await encrypt(content, key);
+const encryptedJson = JSON.stringify(payload);
+
+// The gist filename: original name + .encrypted
+const baseName = filename.split("/").pop() || filename;
+const gistFilename = `${baseName}.encrypted`;
+
+// Create gist via gh CLI
+const description = values.description || `Encrypted: ${baseName}`;
+const proc = Bun.spawn(
+  ["gh", "gist", "create", "--filename", gistFilename, "-d", description, "-"],
+  {
+    stdin: new Blob([encryptedJson]),
+    stdout: "pipe",
+    stderr: "pipe",
+  },
+);
+
+const stdout = await new Response(proc.stdout).text();
+const stderr = await new Response(proc.stderr).text();
+const exitCode = await proc.exited;
+
+if (exitCode !== 0) {
+  console.error("Failed to create gist:");
+  console.error(stderr);
+  process.exit(1);
+}
+
+// Extract gist ID from the gh output URL
+const gistUrl = stdout.trim();
+const gistId = gistUrl.split("/").pop();
+
+if (!gistId) {
+  console.error("Could not parse gist ID from:", gistUrl);
+  process.exit(1);
+}
+
+const shareUrl = `https://${SITE_URL}/${gistId}#key=${keyString}`;
+
+console.log("");
+console.log("Encrypted gist created.");
+console.log("");
+console.log(`  Share URL: ${shareUrl}`);
+console.log("");
+console.log(`  Gist:      ${gistUrl}`);
+console.log(`  Key:       ${keyString}`);
+console.log("");
+console.log("The key is only in the URL fragment. It is never sent to the server.");

@@ -225,6 +225,16 @@ export function isStructuredData(filename: string): boolean {
   return isJSON(filename) || isCSV(filename) || isYAML(filename) || isICS(filename);
 }
 
+export function isEncrypted(filename: string): boolean {
+  return filename.endsWith(".encrypted");
+}
+
+// Get the original extension from an encrypted filename (e.g. "notes.md.encrypted" → "md")
+export function getEncryptedOriginalExtension(filename: string): string {
+  const withoutEncrypted = filename.replace(/\.encrypted$/, "");
+  return withoutEncrypted.split(".").pop()?.toLowerCase() ?? "txt";
+}
+
 export function getFileExtension(filename: string): string {
   return filename.split(".").pop()?.toLowerCase() ?? "txt";
 }

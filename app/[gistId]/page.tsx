@@ -1,5 +1,6 @@
 import { AuthorFooter } from "@/components/author-footer";
 import { CodeRenderer } from "@/components/code-renderer";
+import { EncryptedGistViewer } from "@/components/encrypted-gist-viewer";
 import { GistClientShell } from "@/components/gist-client-shell";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { CsvViewer } from "@/components/renderers/csv-viewer";
@@ -11,7 +12,9 @@ import type { GistFile } from "@/lib/github";
 import {
   fetchGist,
   fetchUser,
+  getEncryptedOriginalExtension,
   isCSV,
+  isEncrypted,
   isICS,
   isJSON,
   isMarkdown,
@@ -166,6 +169,44 @@ export default async function GistPage({ params }: PageProps) {
 
   const files = Object.values(gist.files);
   const filenames = files.map((f) => f.filename);
+
+  // Encrypted gists: all files are .encrypted, render client-only decryption viewer
+  const hasEncryptedFiles = files.some((f) => isEncrypted(f.filename));
+  if (hasEncryptedFiles) {
+    const encryptedFiles = files.filter((f) => isEncrypted(f.filename)).map((f) => ({
+      filename: f.filename,
+      encryptedContent: f.content,
+      originalExtension: getEncryptedOriginalExtension(f.filename),
+    }));
+
+    return (
+      <main className="min-h-screen flex flex-col">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full flex-1 flex flex-col">
+          <header className="mb-8">
+            <h1 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 truncate">
+              {gist.description || filenames[0]}
+            </h1>
+          </header>
+          <EncryptedGistViewer files={encryptedFiles} />
+          <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
+            <div className="flex items-center justify-between text-xs text-neutral-400">
+              <a
+                href={gist.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+              >
+                View on GitHub
+              </a>
+              <a href="/" className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors">
+                gists.sh
+              </a>
+            </div>
+          </footer>
+        </div>
+      </main>
+    );
+  }
 
   // Build serializable file data for the client shell
   const fileData = files.map((f) => ({
