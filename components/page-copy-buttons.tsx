@@ -19,7 +19,6 @@ interface PageCopyButtonsProps {
   content: string;
   filename: string;
   originalUrl: string;
-  user: string;
   gistId: string;
   showCopyFormatted?: boolean;
 }
@@ -28,7 +27,6 @@ export function PageCopyButtons({
   content,
   filename,
   originalUrl,
-  user,
   gistId,
   showCopyFormatted = false,
 }: PageCopyButtonsProps) {
@@ -92,7 +90,7 @@ export function PageCopyButtons({
 
     const toastId = toast.loading("Refreshing gist...");
     try {
-      const res = await fetch(`/${user}/${gistId}/refresh`, { method: "POST" });
+      const res = await fetch(`/${gistId}/refresh`, { method: "POST" });
       if (res.ok) {
         // Brief delay so the revalidated content is available before Next.js refetches
         await new Promise((r) => setTimeout(r, 1000));
@@ -109,7 +107,7 @@ export function PageCopyButtons({
     } finally {
       refreshingRef.current = false;
     }
-  }, [user, gistId, router]);
+  }, [gistId, router]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {

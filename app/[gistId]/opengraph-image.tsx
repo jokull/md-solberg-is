@@ -7,12 +7,14 @@ export const alt = "Gist on gists.sh";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+const USERNAME = "jokull";
+
 export default async function Image({
   params,
 }: {
-  params: Promise<{ user: string; gistId: string }>;
+  params: Promise<{ gistId: string }>;
 }) {
-  const { user, gistId } = await params;
+  const { gistId } = await params;
 
   const fontsDir = join(process.cwd(), "public/fonts");
   const [geistSemiBold, geistRegular, geistMono] = await Promise.all([
@@ -109,7 +111,7 @@ export default async function Image({
           }}
         >
           <img
-            src={`https://github.com/${user}.png?size=120`}
+            src={`https://github.com/${USERNAME}.png?size=120`}
             alt=""
             width={50}
             height={50}
@@ -123,7 +125,7 @@ export default async function Image({
               color: "hsl(0, 0%, 45%)",
             }}
           >
-            {user}
+            {USERNAME}
           </span>
         </div>
       </div>

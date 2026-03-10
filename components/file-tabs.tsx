@@ -6,14 +6,12 @@ import { useCallback } from "react";
 interface FileTabsProps {
   filenames: string[];
   activeFile: string;
-  user: string;
   gistId: string;
 }
 
 export function FileTabs({
   filenames,
   activeFile,
-  user,
   gistId,
 }: FileTabsProps) {
   const searchParams = useSearchParams();
@@ -30,9 +28,9 @@ export function FileTabs({
       // Use pushState for instant client-side switching — no server round-trip
       // since all files are pre-rendered. Next.js 14.1+ integrates pushState
       // with useSearchParams() so the UI reacts to the URL change.
-      window.history.pushState(null, "", `/${user}/${gistId}${query ? `?${query}` : ""}`);
+      window.history.pushState(null, "", `/${gistId}${query ? `?${query}` : ""}`);
     },
-    [searchParams, filenames, user, gistId],
+    [searchParams, filenames, gistId],
   );
 
   if (filenames.length <= 1) return null;

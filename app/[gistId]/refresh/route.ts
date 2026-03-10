@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // This endpoint is kept for API compatibility but is effectively a no-op.
 export async function POST(
   _request: NextRequest,
-  { params }: { params: Promise<{ user: string; gistId: string }> },
+  { params }: { params: Promise<{ gistId: string }> },
 ) {
   const { gistId } = await params;
 

@@ -35,8 +35,10 @@ function ContentLoader() {
   );
 }
 
+const USERNAME = "jokull";
+
 interface PageProps {
-  params: Promise<{ user: string; gistId: string }>;
+  params: Promise<{ gistId: string }>;
 }
 
 const fetchGistCached = cache(async (gistId: string) => fetchGist(gistId));
@@ -45,7 +47,7 @@ const fetchUserCached = cache(async (username: string) => fetchUser(username));
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { user, gistId } = await params;
+  const { gistId } = await params;
   const gist = await fetchGistCached(gistId);
 
   if (!gist) {
@@ -73,8 +75,8 @@ export async function generateMetadata({
     ? rawPreview.length > 200
       ? rawPreview.slice(0, 200).replace(/\s+\S*$/, "") + "..."
       : rawPreview
-    : `${firstFile?.filename} by ${user}`;
-  const githubUrl = `https://gist.github.com/${user}/${gistId}`;
+    : `${firstFile?.filename} by ${USERNAME}`;
+  const githubUrl = `https://gist.github.com/${USERNAME}/${gistId}`;
 
   return {
     title: `${title} · gists.sh`,
@@ -91,7 +93,7 @@ export async function generateMetadata({
       title,
       description,
       type: "article",
-      url: `https://gists.sh/${user}/${gistId}`,
+      url: `https://gists.sh/${gistId}`,
     },
     twitter: {
       card: "summary_large_image",
@@ -159,10 +161,10 @@ async function renderFileContent(file: GistFile) {
 }
 
 export default async function GistPage({ params }: PageProps) {
-  const { user, gistId } = await params;
+  const { gistId } = await params;
   const [gist, githubUser] = await Promise.all([
     fetchGistCached(gistId),
-    fetchUserCached(user),
+    fetchUserCached(USERNAME),
   ]);
 
   if (!gist) {
@@ -199,7 +201,6 @@ export default async function GistPage({ params }: PageProps) {
         gistPublic={gist.public}
         gistHtmlUrl={gist.html_url}
         gistOwner={!!gist.owner}
-        user={user}
         gistId={gistId}
         authorFooter={gist.owner ? <AuthorFooter user={githubUser} /> : null}
       >

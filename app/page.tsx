@@ -24,11 +24,10 @@ function GistCard({ gist }: { gist: GistSummary }) {
   const files = Object.values(gist.files);
   const firstFile = files[0];
   const title = gist.description || firstFile?.filename || "Untitled";
-  const owner = gist.owner?.login ?? USERNAME;
 
   return (
     <Link
-      href={`/${owner}/${gist.id}`}
+      href={`/${gist.id}`}
       className="group block py-4 -mx-1 px-1 rounded-md transition-colors"
     >
       <div className="flex items-start justify-between gap-4">

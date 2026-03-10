@@ -24,7 +24,6 @@ interface GistClientShellProps {
   gistPublic: boolean;
   gistHtmlUrl: string;
   gistOwner: boolean;
-  user: string;
   gistId: string;
   authorFooter: ReactNode;
   children: ReactNode;
@@ -37,7 +36,6 @@ export function GistClientShell({
   gistPublic,
   gistHtmlUrl,
   gistOwner,
-  user,
   gistId,
   authorFooter,
   children,
@@ -80,7 +78,6 @@ export function GistClientShell({
               content={activeData.content}
               filename={activeFilename}
               originalUrl={gistHtmlUrl}
-              user={user}
               gistId={gistId}
               showCopyFormatted={activeData.isMarkdown}
             />
@@ -91,7 +88,6 @@ export function GistClientShell({
         <FileTabs
           filenames={filenames}
           activeFile={activeFilename}
-          user={user}
           gistId={gistId}
         />
 
