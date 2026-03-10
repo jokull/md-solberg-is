@@ -65,11 +65,7 @@ export function BeforeAfter() {
       {/* Segmented control */}
       <div className="relative z-1 flex flex-col items-start gap-2.5">
         <Text>See the difference:</Text>
-        <SegmentedControl
-          options={VIEW_OPTIONS}
-          value={view}
-          onChange={handleChange}
-        />
+        <SegmentedControl options={VIEW_OPTIONS} value={view} onChange={handleChange} />
       </div>
 
       {/* Preview panel */}
@@ -77,9 +73,7 @@ export function BeforeAfter() {
         <div className="relative h-70 shadow-[0_0_40px_rgba(0,0,0,0.1)] rounded-lg">
           <div
             className={`absolute inset-0 transition-opacity duration-300 ${
-              view === "github"
-                ? "opacity-100"
-                : "opacity-0 pointer-events-none"
+              view === "github" ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
             <GitHubMockup />

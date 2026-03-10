@@ -26,36 +26,33 @@ import { createHighlighterCore } from "shiki/core";
 import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 
 const highlighter = createHighlighterCore({
-	themes: [
-		import("@shikijs/themes/github-light"),
-		import("@shikijs/themes/github-dark"),
-	],
-	langs: [
-		langBash,
-		langC,
-		langCpp,
-		langCsharp,
-		langCss,
-		langGo,
-		langHtml,
-		langJava,
-		langJson,
-		langJsx,
-		langKotlin,
-		langMarkdown,
-		langObjectiveC,
-		langPython,
-		langRuby,
-		langRust,
-		langSql,
-		langSwift,
-		langToml,
-		langTsx,
-		langTypescript,
-		langXml,
-		langYaml,
-	],
-	engine: createJavaScriptRegexEngine(),
+  themes: [import("@shikijs/themes/github-light"), import("@shikijs/themes/github-dark")],
+  langs: [
+    langBash,
+    langC,
+    langCpp,
+    langCsharp,
+    langCss,
+    langGo,
+    langHtml,
+    langJava,
+    langJson,
+    langJsx,
+    langKotlin,
+    langMarkdown,
+    langObjectiveC,
+    langPython,
+    langRuby,
+    langRust,
+    langSql,
+    langSwift,
+    langToml,
+    langTsx,
+    langTypescript,
+    langXml,
+    langYaml,
+  ],
+  engine: createJavaScriptRegexEngine(),
 });
 
 // Map file extensions to Shiki language identifiers
@@ -105,10 +102,7 @@ export function getShikiLang(filename: string, language: string | null): string 
 
 export { highlighter };
 
-export async function highlightCode(
-  code: string,
-  lang: string,
-): Promise<string> {
+export async function highlightCode(code: string, lang: string): Promise<string> {
   const hl = await highlighter;
   try {
     return hl.codeToHtml(code, {

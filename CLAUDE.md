@@ -79,7 +79,7 @@ Requires `gh` CLI (authenticated) and `bun`.
 Encrypted gist files are named `<original>.<ext>.encrypted` (e.g. `notes.md.encrypted`). The original extension is preserved so the viewer knows how to render after decryption. File contents are JSON:
 
 ```json
-{"v":1,"iv":"<base64url>","ct":"<base64url>"}
+{ "v": 1, "iv": "<base64url>", "ct": "<base64url>" }
 ```
 
 ### Security properties

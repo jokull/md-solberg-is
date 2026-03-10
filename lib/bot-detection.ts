@@ -20,8 +20,7 @@ const BOT_UA_PATTERNS: RegExp[] = [
   /bytespider/i,
 ];
 
-const BROWSER_ENGINE_RE =
-  /(Chrome|CriOS|Firefox|FxiOS|Safari|Edg|OPR)\//i;
+const BROWSER_ENGINE_RE = /(Chrome|CriOS|Firefox|FxiOS|Safari|Edg|OPR)\//i;
 
 export function isBotRequest(headers: HeaderReader): boolean {
   const userAgent = headers.get("user-agent")?.trim() ?? "";

@@ -3,7 +3,13 @@
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Check, Copy } from "lucide-react";
 
-export function ClickToCopy({ text, toastMessage = "Copied to clipboard" }: { text: string; toastMessage?: string }) {
+export function ClickToCopy({
+  text,
+  toastMessage = "Copied to clipboard",
+}: {
+  text: string;
+  toastMessage?: string;
+}) {
   const { copied, copy } = useCopyToClipboard();
 
   return (

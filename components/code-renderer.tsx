@@ -6,11 +6,7 @@ interface CodeRendererProps {
   language: string | null;
 }
 
-export async function CodeRenderer({
-  content,
-  filename,
-  language,
-}: CodeRendererProps) {
+export async function CodeRenderer({ content, filename, language }: CodeRendererProps) {
   const lang = getShikiLang(filename, language);
   const html = await highlightCode(content, lang);
 

@@ -85,8 +85,8 @@ function ReadmeContent() {
           TIP
         </p>
         <p className="text-[0.9375rem] text-[#1a1a1a] dark:text-[#d4d4d4] leading-[1.75]">
-          You&apos;re looking at a gists.sh page right now. Try switching
-          between the file tabs above.
+          You&apos;re looking at a gists.sh page right now. Try switching between the file tabs
+          above.
         </p>
       </div>
     </>
@@ -99,25 +99,15 @@ function SkillContent() {
       {/* Frontmatter card mockup */}
       <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden text-[11px]">
         <div className="flex gap-3 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
-          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">
-            name
-          </span>
-          <span className="text-neutral-900 dark:text-neutral-200">
-            gists-sh
-          </span>
+          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">name</span>
+          <span className="text-neutral-900 dark:text-neutral-200">gists-sh</span>
         </div>
         <div className="flex gap-3 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
-          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">
-            version
-          </span>
-          <span className="text-neutral-900 dark:text-neutral-200">
-            2.1.0
-          </span>
+          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">version</span>
+          <span className="text-neutral-900 dark:text-neutral-200">2.1.0</span>
         </div>
         <div className="flex gap-3 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
-          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">
-            triggers
-          </span>
+          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">triggers</span>
           <div className="flex flex-wrap gap-1">
             {["gist creation", "share code snippet"].map((t) => (
               <span
@@ -130,9 +120,7 @@ function SkillContent() {
           </div>
         </div>
         <div className="px-3 py-2">
-          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">
-            description
-          </span>
+          <span className="shrink-0 font-mono text-neutral-500 min-w-[70px]">description</span>
           <p className="mt-1 text-neutral-900 dark:text-neutral-200 leading-relaxed">
             Present gists.sh URLs when creating or sharing GitHub Gists.
           </p>
@@ -161,56 +149,39 @@ function CodeContent() {
   return (
     <div className="rounded-lg bg-[#fafafa] dark:bg-[#171717] p-4 font-mono text-[11px] leading-[1.7] text-neutral-600 dark:text-neutral-400">
       <div>
-        <span className="text-purple-700 dark:text-purple-400">
-          interface
-        </span>{" "}
-        <span className="text-yellow-700 dark:text-yellow-400">
-          GistFile
-        </span>{" "}
-        {"{"}
+        <span className="text-purple-700 dark:text-purple-400">interface</span>{" "}
+        <span className="text-yellow-700 dark:text-yellow-400">GistFile</span> {"{"}
       </div>
       <div>
-        {"  "}filename:{" "}
-        <span className="text-blue-700 dark:text-blue-400">string</span>;
+        {"  "}filename: <span className="text-blue-700 dark:text-blue-400">string</span>;
       </div>
       <div>
-        {"  "}language:{" "}
-        <span className="text-blue-700 dark:text-blue-400">string</span>
+        {"  "}language: <span className="text-blue-700 dark:text-blue-400">string</span>
         {" | "}
         <span className="text-blue-700 dark:text-blue-400">null</span>;
       </div>
       <div>
-        {"  "}content:{" "}
-        <span className="text-blue-700 dark:text-blue-400">string</span>;
+        {"  "}content: <span className="text-blue-700 dark:text-blue-400">string</span>;
       </div>
       <div>
-        {"  "}size:{" "}
-        <span className="text-blue-700 dark:text-blue-400">number</span>;
+        {"  "}size: <span className="text-blue-700 dark:text-blue-400">number</span>;
       </div>
       <div>{"}"}</div>
       <div>&nbsp;</div>
       <div>
-        <span className="text-purple-700 dark:text-purple-400">
-          interface
-        </span>{" "}
-        <span className="text-yellow-700 dark:text-yellow-400">Gist</span>{" "}
-        {"{"}
+        <span className="text-purple-700 dark:text-purple-400">interface</span>{" "}
+        <span className="text-yellow-700 dark:text-yellow-400">Gist</span> {"{"}
       </div>
       <div>
-        {"  "}id:{" "}
-        <span className="text-blue-700 dark:text-blue-400">string</span>;
+        {"  "}id: <span className="text-blue-700 dark:text-blue-400">string</span>;
       </div>
       <div>
-        {"  "}description:{" "}
-        <span className="text-blue-700 dark:text-blue-400">string</span>
+        {"  "}description: <span className="text-blue-700 dark:text-blue-400">string</span>
         {" | "}
         <span className="text-blue-700 dark:text-blue-400">null</span>;
       </div>
       <div>
-        {"  "}files:{" "}
-        <span className="text-yellow-700 dark:text-yellow-400">
-          GistFile
-        </span>
+        {"  "}files: <span className="text-yellow-700 dark:text-yellow-400">GistFile</span>
         [];
       </div>
       <div>{"}"}</div>

@@ -20,9 +20,7 @@ interface DataTreeViewerProps {
 // Check if a value renders as a collapsible (complex) node
 function isComplexValue(value: unknown): boolean {
   if (isArrayOfPrimitives(value)) return false;
-  return (
-    isArrayOfObjects(value) || Array.isArray(value) || isPlainObject(value)
-  );
+  return isArrayOfObjects(value) || Array.isArray(value) || isPlainObject(value);
 }
 
 // Top-level arrays of objects: use table only when values are simple primitives,
@@ -56,13 +54,7 @@ export function DataTreeViewer({ data }: DataTreeViewerProps) {
 }
 
 // Grid-based key-value rendering for aligned columns
-function ObjectEntries({
-  data,
-  depth,
-}: {
-  data: Record<string, unknown>;
-  depth: number;
-}) {
+function ObjectEntries({ data, depth }: { data: Record<string, unknown>; depth: number }) {
   const entries = Object.entries(data);
 
   return (
@@ -78,17 +70,9 @@ function ObjectEntries({
 
         return (
           <Fragment key={key}>
-            <span
-              className={cn("text-neutral-500 dark:text-neutral-500", spacing)}
-            >
-              {key}
-            </span>
+            <span className={cn("text-neutral-500 dark:text-neutral-500", spacing)}>{key}</span>
             <div className={spacing}>
-              <JsonNode
-                value={value}
-                depth={depth + 1}
-                defaultExpanded={depth < 1}
-              />
+              <JsonNode value={value} depth={depth + 1} defaultExpanded={depth < 1} />
             </div>
           </Fragment>
         );
@@ -106,11 +90,7 @@ interface JsonNodeProps {
 function JsonNode({ value, depth, defaultExpanded }: JsonNodeProps) {
   // Primitives
   if (value === null) {
-    return (
-      <span className="text-neutral-400 dark:text-neutral-600 italic">
-        null
-      </span>
-    );
+    return <span className="text-neutral-400 dark:text-neutral-600 italic">null</span>;
   }
 
   if (typeof value === "boolean") {
@@ -122,11 +102,7 @@ function JsonNode({ value, depth, defaultExpanded }: JsonNodeProps) {
   }
 
   if (typeof value === "string") {
-    return (
-      <span className="text-green-700 dark:text-green-400">
-        &quot;{value}&quot;
-      </span>
-    );
+    return <span className="text-green-700 dark:text-green-400">&quot;{value}&quot;</span>;
   }
 
   // Arrays of primitives
@@ -161,11 +137,7 @@ function JsonNode({ value, depth, defaultExpanded }: JsonNodeProps) {
               <span className="shrink-0 text-neutral-300 dark:text-neutral-700 select-none">
                 {i}
               </span>
-              <JsonNode
-                value={item}
-                depth={depth + 1}
-                defaultExpanded={depth < 1}
-              />
+              <JsonNode value={item} depth={depth + 1} defaultExpanded={depth < 1} />
             </div>
           ))}
         </div>
@@ -198,12 +170,7 @@ interface CollapsibleNodeProps {
   children: React.ReactNode;
 }
 
-function CollapsibleNode({
-  depth,
-  defaultExpanded,
-  preview,
-  children,
-}: CollapsibleNodeProps) {
+function CollapsibleNode({ depth, defaultExpanded, preview, children }: CollapsibleNodeProps) {
   const [expanded, setExpanded] = useState(defaultExpanded ?? depth < 2);
 
   return (
@@ -219,9 +186,7 @@ function CollapsibleNode({
             expanded && "rotate-90",
           )}
         />
-        <span className="text-neutral-400 dark:text-neutral-600">
-          {preview}
-        </span>
+        <span className="text-neutral-400 dark:text-neutral-600">{preview}</span>
       </button>
       {expanded && (
         <div className="mt-1 ml-[6px] pl-[12px] border-l first-of-type:pt-1 last-of-type:pb-1 border-neutral-200 dark:border-neutral-800">

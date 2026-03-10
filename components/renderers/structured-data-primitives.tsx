@@ -1,48 +1,28 @@
 export function isPrimitive(value: unknown): value is string | number | boolean {
-  return (
-    typeof value === "string" ||
-    typeof value === "number" ||
-    typeof value === "boolean"
-  );
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
 }
 
-export function isArrayOfPrimitives(
-  value: unknown,
-): value is (string | number | boolean)[] {
+export function isArrayOfPrimitives(value: unknown): value is (string | number | boolean)[] {
+  return Array.isArray(value) && value.length > 0 && value.every((v) => isPrimitive(v));
+}
+
+export function isArrayOfObjects(value: unknown): value is Record<string, unknown>[] {
   return (
     Array.isArray(value) &&
     value.length > 0 &&
-    value.every((v) => isPrimitive(v))
-  );
-}
-
-export function isArrayOfObjects(
-  value: unknown,
-): value is Record<string, unknown>[] {
-  return (
-    Array.isArray(value) &&
-    value.length > 0 &&
-    value.every(
-      (v) => typeof v === "object" && v !== null && !Array.isArray(v),
-    )
+    value.every((v) => typeof v === "object" && v !== null && !Array.isArray(v))
   );
 }
 
 // Returns true if all values in all objects are primitives, null, or arrays of primitives.
 // When false, the data is too complex for a flat table and should use tree view instead.
-export function isFlatArrayOfObjects(
-  value: Record<string, unknown>[],
-): boolean {
+export function isFlatArrayOfObjects(value: Record<string, unknown>[]): boolean {
   return value.every((obj) =>
-    Object.values(obj).every(
-      (v) => v == null || isPrimitive(v) || isArrayOfPrimitives(v),
-    ),
+    Object.values(obj).every((v) => v == null || isPrimitive(v) || isArrayOfPrimitives(v)),
   );
 }
 
-export function isPlainObject(
-  value: unknown,
-): value is Record<string, unknown> {
+export function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
@@ -84,16 +64,11 @@ export function ObjectTable({ items }: { items: Record<string, unknown>[] }) {
             <tr
               key={i}
               className={
-                i < items.length - 1
-                  ? "border-b border-neutral-100 dark:border-neutral-800/50"
-                  : ""
+                i < items.length - 1 ? "border-b border-neutral-100 dark:border-neutral-800/50" : ""
               }
             >
               {allKeys.map((key) => (
-                <td
-                  key={key}
-                  className="px-3 py-1.5 text-neutral-700 dark:text-neutral-300"
-                >
+                <td key={key} className="px-3 py-1.5 text-neutral-700 dark:text-neutral-300">
                   <TableCellValue value={item[key]} />
                 </td>
               ))}
@@ -107,19 +82,13 @@ export function ObjectTable({ items }: { items: Record<string, unknown>[] }) {
 
 function TableCellValue({ value }: { value: unknown }) {
   if (value == null) {
-    return (
-      <span className="text-neutral-300 dark:text-neutral-700">-</span>
-    );
+    return <span className="text-neutral-300 dark:text-neutral-700">-</span>;
   }
   if (typeof value === "boolean") {
     return <BooleanChip value={value} />;
   }
   if (typeof value === "number") {
-    return (
-      <span className="font-mono text-blue-600 dark:text-blue-400">
-        {value}
-      </span>
-    );
+    return <span className="font-mono text-blue-600 dark:text-blue-400">{value}</span>;
   }
   if (isArrayOfPrimitives(value)) {
     return <PrimitivePills items={value} />;
@@ -127,11 +96,7 @@ function TableCellValue({ value }: { value: unknown }) {
   if (isPrimitive(value)) {
     return <span className="font-mono">{String(value)}</span>;
   }
-  return (
-    <span className="font-mono text-neutral-400">
-      {JSON.stringify(value)}
-    </span>
-  );
+  return <span className="font-mono text-neutral-400">{JSON.stringify(value)}</span>;
 }
 
 export function BooleanChip({ value }: { value: boolean }) {
@@ -154,11 +119,7 @@ export function FrontmatterValue({ value }: { value: unknown }) {
   }
 
   if (isPrimitive(value)) {
-    return (
-      <span className="text-neutral-900 dark:text-neutral-200">
-        {String(value)}
-      </span>
-    );
+    return <span className="text-neutral-900 dark:text-neutral-200">{String(value)}</span>;
   }
 
   if (isArrayOfPrimitives(value)) {
@@ -178,19 +139,13 @@ export function FrontmatterValue({ value }: { value: unknown }) {
     return (
       <PrimitivePills
         items={value.map((v) =>
-          typeof v === "string" || typeof v === "number"
-            ? v
-            : JSON.stringify(v),
+          typeof v === "string" || typeof v === "number" ? v : JSON.stringify(v),
         )}
       />
     );
   }
 
-  return (
-    <span className="text-neutral-500 font-mono text-xs">
-      {JSON.stringify(value)}
-    </span>
-  );
+  return <span className="text-neutral-500 font-mono text-xs">{JSON.stringify(value)}</span>;
 }
 
 export function NestedObject({ data }: { data: Record<string, unknown> }) {

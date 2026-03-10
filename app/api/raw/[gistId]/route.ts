@@ -24,28 +24,21 @@ export async function GET(
 
     // Multi-file: when no specific file requested, multiple files exist,
     // and the client accepts markdown, return all files concatenated
-    const acceptsMarkdown = request.headers
-      .get("accept")
-      ?.includes("text/markdown");
+    const acceptsMarkdown = request.headers.get("accept")?.includes("text/markdown");
     if (!fileParam && files.length > 1 && acceptsMarkdown) {
-      const combined = files
-        .map((f) => `# ${f.filename}\n\n${f.content}`)
-        .join("\n\n---\n\n");
+      const combined = files.map((f) => `# ${f.filename}\n\n${f.content}`).join("\n\n---\n\n");
 
       return new NextResponse(combined, {
         headers: {
           "Content-Type": "text/markdown; charset=utf-8",
           "Content-Security-Policy": "default-src 'none'",
           "X-Content-Type-Options": "nosniff",
-          "Cache-Control":
-            "public, s-maxage=86400, stale-while-revalidate=86400",
+          "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=86400",
         },
       });
     }
 
-    const targetFile = fileParam
-      ? files.find((f) => f.filename === fileParam)
-      : files[0];
+    const targetFile = fileParam ? files.find((f) => f.filename === fileParam) : files[0];
 
     if (!targetFile) {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
@@ -64,14 +57,8 @@ export async function GET(
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
     if (message.includes("rate limit")) {
-      return NextResponse.json(
-        { error: "Rate limit exceeded" },
-        { status: 429 },
-      );
+      return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
     }
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

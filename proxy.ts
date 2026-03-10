@@ -32,9 +32,7 @@ function buildCsp(): string {
   // makes Next.js re-render every request), breaking ISR/CDN caching.
   // 'unsafe-inline' is sufficient here: the site has no auth/sensitive forms,
   // and gist content is sanitized by rehype-sanitize + default-src 'self'.
-  const scriptSrc = isDev
-    ? "'self' 'unsafe-inline' 'unsafe-eval'"
-    : "'self' 'unsafe-inline'";
+  const scriptSrc = isDev ? "'self' 'unsafe-inline' 'unsafe-eval'" : "'self' 'unsafe-inline'";
 
   const directives = [
     "default-src 'self'",
@@ -82,10 +80,7 @@ export function proxy(request: NextRequest) {
       accept.includes("text/markdown") ||
       (accept.includes("text/plain") && !accept.includes("text/html"));
 
-    if (
-      wantsRawContent &&
-      /^[a-f0-9]{20}$|^[a-f0-9]{32}$/.test(gistIdWithExt)
-    ) {
+    if (wantsRawContent && /^[a-f0-9]{20}$|^[a-f0-9]{32}$/.test(gistIdWithExt)) {
       const url = request.nextUrl.clone();
       url.pathname = `/api/raw/${gistIdWithExt}`;
       return applySecurityHeaders(NextResponse.rewrite(url));

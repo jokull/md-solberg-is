@@ -13,11 +13,7 @@ interface StructuredFileViewerProps {
   rawContent: string;
 }
 
-export function StructuredFileViewer({
-  children,
-  rawHtml,
-  rawContent,
-}: StructuredFileViewerProps) {
+export function StructuredFileViewer({ children, rawHtml, rawContent }: StructuredFileViewerProps) {
   const [mode, setMode] = useState<ViewMode>("pretty");
 
   return (
@@ -38,11 +34,7 @@ export function StructuredFileViewer({
         children
       ) : (
         <div className="code-block-wrapper relative">
-          <CopyButton
-            text={rawContent}
-            label="Copy code"
-            className="code-copy-btn"
-          />
+          <CopyButton text={rawContent} label="Copy code" className="code-copy-btn" />
           <div
             className="text-[13px] leading-relaxed [&_pre]:rounded-lg [&_pre]:p-5 [&_pre]:overflow-x-auto"
             dangerouslySetInnerHTML={{ __html: rawHtml }}

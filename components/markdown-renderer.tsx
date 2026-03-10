@@ -35,10 +35,7 @@ const sanitizeSchema: typeof defaultSchema = {
     h4: [...(defaultSchema.attributes?.h4 ?? []), "id"],
     h5: [...(defaultSchema.attributes?.h5 ?? []), "id"],
     h6: [...(defaultSchema.attributes?.h6 ?? []), "id"],
-    span: [
-      ...(defaultSchema.attributes?.span ?? []),
-      ["style", /^color:#[0-9a-fA-F]{3,8}$/],
-    ],
+    span: [...(defaultSchema.attributes?.span ?? []), ["style", /^color:#[0-9a-fA-F]{3,8}$/]],
     pre: [
       ...(defaultSchema.attributes?.pre ?? []),
       [
@@ -53,12 +50,7 @@ const sanitizeSchema: typeof defaultSchema = {
         /^(background-color|color):#[0-9a-fA-F]{3,8}(;(background-color|color):#[0-9a-fA-F]{3,8})*;?$/,
       ],
     ],
-    a: [
-      ...(defaultSchema.attributes?.a ?? []),
-      "ariaHidden",
-      "ariaLabel",
-      "tabIndex",
-    ],
+    a: [...(defaultSchema.attributes?.a ?? []), "ariaHidden", "ariaLabel", "tabIndex"],
     svg: ["xmlns", "viewBox", "width", "height", "fill"],
     path: ["d"],
     "*": [...(defaultSchema.attributes?.["*"] ?? []), "className"],
@@ -99,8 +91,7 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
   const headings: TocEntry[] = [];
 
   // Parse frontmatter if present
-  const { data: frontmatter, content: markdownContent } =
-    parseFrontmatter(content);
+  const { data: frontmatter, content: markdownContent } = parseFrontmatter(content);
   const hasFrontmatter = Object.keys(frontmatter).length > 0;
 
   let html: string;

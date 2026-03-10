@@ -14,13 +14,6 @@ const variantClasses: Record<TextVariant, string> = {
   meta: "text-xs font-mono text-neutral-450 dark:text-neutral-500",
 };
 
-export function Text({
-  variant = "body",
-  children,
-  className,
-  as: Tag = "p",
-}: TextProps) {
-  return (
-    <Tag className={cn(variantClasses[variant], className)}>{children}</Tag>
-  );
+export function Text({ variant = "body", children, className, as: Tag = "p" }: TextProps) {
+  return <Tag className={cn(variantClasses[variant], className)}>{children}</Tag>;
 }

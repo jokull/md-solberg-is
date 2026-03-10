@@ -10,12 +10,7 @@ interface CopyButtonProps {
   children?: React.ReactNode;
 }
 
-export function CopyButton({
-  text,
-  className = "",
-  label = "Copy",
-  children,
-}: CopyButtonProps) {
+export function CopyButton({ text, className = "", label = "Copy", children }: CopyButtonProps) {
   const { copied, copy } = useCopyToClipboard();
 
   return (

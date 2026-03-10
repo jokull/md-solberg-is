@@ -139,28 +139,19 @@ export function ParamConfigurator() {
         className="flex items-center justify-between font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 transition-colors overflow-hidden"
       >
         <span>
-          <span className="text-neutral-900 dark:text-neutral-100 font-medium">
-            gists.sh
-          </span>
+          <span className="text-neutral-900 dark:text-neutral-100 font-medium">gists.sh</span>
           <span className="text-neutral-500 dark:text-neutral-600">
             /{DEMO_GIST.replace(/\/(.{3}).+(.{3})$/, "/$1...$2")}
           </span>
-          {paramString && (
-            <span className="text-blue-500">{paramString}</span>
-          )}
+          {paramString && <span className="text-blue-500">{paramString}</span>}
         </span>
         <ArrowUpRight size={14} className="text-neutral-400 dark:text-neutral-600 shrink-0 ml-3" />
       </Link>
-      <Text>
-        Append URL params to any gist link to customize how it looks.
-      </Text>
+      <Text>Append URL params to any gist link to customize how it looks.</Text>
       <div className="font-mono text-xs border border-neutral-150 dark:border-neutral-800 rounded-lg px-4 py-3 space-y-1 text-neutral-500 dark:text-neutral-500">
         {PARAM_DOCS.map((d) => (
           <div key={d.param}>
-            <span className="text-neutral-700 dark:text-neutral-300">
-              ?{d.param}
-            </span>{" "}
-            {d.desc}
+            <span className="text-neutral-700 dark:text-neutral-300">?{d.param}</span> {d.desc}
           </div>
         ))}
       </div>

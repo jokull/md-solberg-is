@@ -50,14 +50,14 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
             </a>
           </div>
 
-          {user.bio && (
-            <Text className="mt-1 line-clamp-2">
-              {user.bio}
-            </Text>
-          )}
+          {user.bio && <Text className="mt-1 line-clamp-2">{user.bio}</Text>}
 
           {hasSocials && (
-            <Text variant="meta" as="div" className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <Text
+              variant="meta"
+              as="div"
+              className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1"
+            >
               {user.location && (
                 <span className="flex items-center gap-1">
                   <MapPin size={14} className="shrink-0" />

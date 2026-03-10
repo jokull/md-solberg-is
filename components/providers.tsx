@@ -11,11 +11,7 @@ import { Toaster } from "sonner";
  * forcedTheme on ThemeProvider. This prevents URL-forced themes from
  * persisting to localStorage and polluting other tabs/pages.
  */
-function ThemeParamSync({
-  onForcedTheme,
-}: {
-  onForcedTheme: (theme: string | undefined) => void;
-}) {
+function ThemeParamSync({ onForcedTheme }: { onForcedTheme: (theme: string | undefined) => void }) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -36,18 +32,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // doesn't write to localStorage / affect other tabs.
   const [forcedTheme, setForcedTheme] = useState<string | undefined>();
 
-  const handleForcedTheme = useCallback(
-    (theme: string | undefined) => setForcedTheme(theme),
-    [],
-  );
+  const handleForcedTheme = useCallback((theme: string | undefined) => setForcedTheme(theme), []);
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      forcedTheme={forcedTheme}
-    >
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem forcedTheme={forcedTheme}>
       <Suspense>
         <ThemeParamSync onForcedTheme={handleForcedTheme} />
       </Suspense>

@@ -212,9 +212,7 @@ export function IcsViewer({ content }: IcsViewerProps) {
   const events = useMemo(() => parseEvents(content), [content]);
 
   if (events.length === 0) {
-    return (
-      <p className="text-sm text-neutral-500">No events found</p>
-    );
+    return <p className="text-sm text-neutral-500">No events found</p>;
   }
 
   return (
