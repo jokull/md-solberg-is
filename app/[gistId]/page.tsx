@@ -25,7 +25,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 function ContentLoader() {
   return (

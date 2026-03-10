@@ -4,6 +4,9 @@
 	"compatibility_date": "2026-02-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"main": "./worker/index.ts",
+	"kv_namespaces": [
+		{ "binding": "VINEXT_CACHE", "id": "da4b26aeebb14cc4935c160c355d39f8" }
+	],
 	"vars": {
 		"SITE_URL": "https://md.solberg.is"
 	},
