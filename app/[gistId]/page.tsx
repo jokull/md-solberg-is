@@ -38,7 +38,9 @@ function ContentLoader() {
   );
 }
 
-const USERNAME = "jokull";
+function getUsername(): string {
+  return process.env.GIST_getUsername() || "jokull";
+}
 
 interface PageProps {
   params: Promise<{ gistId: string }>;
@@ -76,8 +78,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? rawPreview.length > 200
       ? rawPreview.slice(0, 200).replace(/\s+\S*$/, "") + "..."
       : rawPreview
-    : `${firstFile?.filename} by ${USERNAME}`;
-  const githubUrl = `https://gist.github.com/${USERNAME}/${gistId}`;
+    : `${firstFile?.filename} by ${getUsername()}`;
+  const githubUrl = `https://gist.github.com/${getUsername()}/${gistId}`;
 
   return {
     title: `${title} · gists.sh`,
@@ -160,7 +162,7 @@ export default async function GistPage({ params }: PageProps) {
   const { gistId } = await params;
   const [gist, githubUser] = await Promise.all([
     fetchGistCached(gistId),
-    fetchUserCached(USERNAME),
+    fetchUserCached(getUsername()),
   ]);
 
   if (!gist) {
@@ -173,11 +175,13 @@ export default async function GistPage({ params }: PageProps) {
   // Encrypted gists: all files are .encrypted, render client-only decryption viewer
   const hasEncryptedFiles = files.some((f) => isEncrypted(f.filename));
   if (hasEncryptedFiles) {
-    const encryptedFiles = files.filter((f) => isEncrypted(f.filename)).map((f) => ({
-      filename: f.filename,
-      encryptedContent: f.content,
-      originalExtension: getEncryptedOriginalExtension(f.filename),
-    }));
+    const encryptedFiles = files
+      .filter((f) => isEncrypted(f.filename))
+      .map((f) => ({
+        filename: f.filename,
+        encryptedContent: f.content,
+        originalExtension: getEncryptedOriginalExtension(f.filename),
+      }));
 
     return (
       <main className="min-h-screen flex flex-col">
@@ -198,7 +202,10 @@ export default async function GistPage({ params }: PageProps) {
               >
                 View on GitHub
               </a>
-              <a href="/" className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors">
+              <a
+                href="/"
+                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+              >
                 gists.sh
               </a>
             </div>

@@ -7,21 +7,31 @@ export function HashScroller() {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
 
+    // Element might already be in the DOM
+    const existing = document.getElementById(hash);
+    if (existing) {
+      existing.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+
     // Content may not be in the DOM yet (streamed via Suspense),
-    // so poll briefly for the target element.
-    let attempts = 0;
-    const maxAttempts = 20;
-    const interval = setInterval(() => {
+    // so watch for it with a MutationObserver.
+    const observer = new MutationObserver(() => {
       const el = document.getElementById(hash);
       if (el) {
-        clearInterval(interval);
+        observer.disconnect();
         el.scrollIntoView({ behavior: "smooth" });
-      } else if (++attempts >= maxAttempts) {
-        clearInterval(interval);
       }
-    }, 100);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
-    return () => clearInterval(interval);
+    // Stop observing after 5 seconds to avoid leaking
+    const timeout = setTimeout(() => observer.disconnect(), 5000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
   }, []);
 
   return null;

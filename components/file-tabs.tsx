@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface FileTabsProps {
   filenames: string[];
@@ -9,8 +9,22 @@ interface FileTabsProps {
   gistId: string;
 }
 
-export function FileTabs({ filenames, activeFile, gistId }: FileTabsProps) {
+export function FileTabs({ filenames, activeFile: initialActiveFile, gistId }: FileTabsProps) {
   const searchParams = useSearchParams();
+  const [, forceUpdate] = useState(0);
+
+  // Sync UI when navigating back/forward via browser buttons
+  useEffect(() => {
+    function handlePopState() {
+      forceUpdate((n) => n + 1);
+    }
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Derive active file from current URL search params
+  const fileParam = new URLSearchParams(window.location.search).get("file");
+  const activeFile = fileParam && filenames.includes(fileParam) ? fileParam : initialActiveFile;
 
   const handleTabClick = useCallback(
     (filename: string) => {
@@ -21,10 +35,8 @@ export function FileTabs({ filenames, activeFile, gistId }: FileTabsProps) {
         params.set("file", filename);
       }
       const query = params.toString();
-      // Use pushState for instant client-side switching — no server round-trip
-      // since all files are pre-rendered. Next.js 14.1+ integrates pushState
-      // with useSearchParams() so the UI reacts to the URL change.
       window.history.pushState(null, "", `/${gistId}${query ? `?${query}` : ""}`);
+      forceUpdate((n) => n + 1);
     },
     [searchParams, filenames, gistId],
   );

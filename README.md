@@ -25,13 +25,13 @@ Multi-file gists get tabs. Toggle between "Pretty" and "Raw" views on structured
 
 Customize how any gist renders by appending query params:
 
-| Param | Effect |
-|---|---|
-| `?theme=dark` | Force dark mode |
-| `?theme=light` | Force light mode |
-| `?noheader` | Hide title, tabs, and copy buttons |
-| `?nofooter` | Hide author info and footer |
-| `?mono` | Monospace font for all text |
+| Param              | Effect                                     |
+| ------------------ | ------------------------------------------ |
+| `?theme=dark`      | Force dark mode                            |
+| `?theme=light`     | Force light mode                           |
+| `?noheader`        | Hide title, tabs, and copy buttons         |
+| `?nofooter`        | Hide author info and footer                |
+| `?mono`            | Monospace font for all text                |
 | `?file={filename}` | Show a specific file from multi-file gists |
 
 Combine them: `gists.sh/user/abc123?theme=dark&noheader&nofooter`
@@ -62,9 +62,10 @@ pnpm dev
 ```
 
 A [GitHub personal access token](https://github.com/settings/tokens) with the `gist` scope raises your API rate limit from 60 to 5,000 requests/hour. Note: the `gist` scope grants read access to all gists on the account, including secret ones. If that's a concern, use a token from a dedicated account with no sensitive gists.
+
 ## Stack
 
-Next.js 15, Tailwind CSS v4, react-markdown, Shiki, deployed on Vercel.
+Next.js 16 (via vinext), Tailwind CSS v4, react-markdown, Shiki, deployed on Cloudflare Workers.
 
 ## Author
 

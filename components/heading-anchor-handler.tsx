@@ -23,9 +23,10 @@ export function HeadingAnchorHandler() {
 
       // Copy the full permalink
       const url = `${window.location.origin}${window.location.pathname}${href}`;
-      navigator.clipboard.writeText(url).then(() => {
-        toast("Link copied to clipboard", { id: "anchor-copy", duration: 2000 });
-      });
+      navigator.clipboard.writeText(url).then(
+        () => toast("Link copied to clipboard", { id: "anchor-copy", duration: 2000 }),
+        () => toast("Failed to copy link", { id: "anchor-copy", duration: 2000 }),
+      );
     }
 
     document.addEventListener("click", handleClick);

@@ -1,6 +1,5 @@
 "use client";
 
-import { isTSV } from "@/lib/github";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Papa from "papaparse";
 import { useMemo, useState } from "react";
@@ -33,7 +32,7 @@ export function CsvViewer({ content, filename }: CsvViewerProps) {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
-  const delimiter = isTSV(filename) ? "\t" : undefined;
+  const delimiter = filename.toLowerCase().endsWith(".tsv") ? "\t" : undefined;
   const result = useMemo(
     () =>
       Papa.parse<Record<string, unknown>>(content, {
@@ -42,7 +41,7 @@ export function CsvViewer({ content, filename }: CsvViewerProps) {
         delimiter,
         skipEmptyLines: true,
       }),
-    [content, delimiter]
+    [content, delimiter],
   );
 
   const headers = result.meta.fields ?? [];
@@ -52,7 +51,7 @@ export function CsvViewer({ content, filename }: CsvViewerProps) {
   const rows = useMemo(() => {
     if (!sortColumn) return result.data.slice(0, MAX_ROWS);
     const sorted = [...result.data].sort((a, b) =>
-      compareValues(a[sortColumn], b[sortColumn], sortDirection)
+      compareValues(a[sortColumn], b[sortColumn], sortDirection),
     );
     return sorted.slice(0, MAX_ROWS);
   }, [result.data, sortColumn, sortDirection]);
@@ -139,15 +138,11 @@ export function CsvViewer({ content, filename }: CsvViewerProps) {
                       }`}
                     >
                       {value === null || value === undefined ? (
-                        <span className="text-neutral-300 dark:text-neutral-700">
-                          -
-                        </span>
+                        <span className="text-neutral-300 dark:text-neutral-700">-</span>
                       ) : typeof value === "boolean" ? (
                         <span
                           className={
-                            value
-                              ? "text-green-700 dark:text-green-400"
-                              : "text-neutral-500"
+                            value ? "text-green-700 dark:text-green-400" : "text-neutral-500"
                           }
                         >
                           {String(value)}

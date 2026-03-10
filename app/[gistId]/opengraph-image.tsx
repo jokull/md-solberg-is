@@ -7,7 +7,9 @@ export const alt = "Gist on gists.sh";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const USERNAME = "jokull";
+function getUsername(): string {
+  return process.env.GIST_getUsername() || "jokull";
+}
 
 export default async function Image({ params }: { params: Promise<{ gistId: string }> }) {
   const { gistId } = await params;
@@ -105,7 +107,7 @@ export default async function Image({ params }: { params: Promise<{ gistId: stri
           }}
         >
           <img
-            src={`https://github.com/${USERNAME}.png?size=120`}
+            src={`https://github.com/${getUsername()}.png?size=120`}
             alt=""
             width={50}
             height={50}
@@ -119,7 +121,7 @@ export default async function Image({ params }: { params: Promise<{ gistId: stri
               color: "hsl(0, 0%, 45%)",
             }}
           >
-            {USERNAME}
+            {getUsername()}
           </span>
         </div>
       </div>

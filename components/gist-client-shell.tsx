@@ -8,7 +8,7 @@ import { SecretBadge } from "@/components/secret-badge";
 import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Children, type ReactNode } from "react";
+import { Children, type ReactNode, useEffect, useState } from "react";
 
 interface FileData {
   filename: string;
@@ -41,10 +41,24 @@ export function GistClientShell({
   children,
 }: GistClientShellProps) {
   const searchParams = useSearchParams();
-  const fileParam = searchParams.get("file");
-  const hideHeader = searchParams.has("noheader");
-  const hideFooter = searchParams.has("nofooter");
-  const monoMode = searchParams.has("mono");
+  const [, forceUpdate] = useState(0);
+
+  // Re-render when navigating back/forward via browser buttons
+  useEffect(() => {
+    function handlePopState() {
+      forceUpdate((n) => n + 1);
+    }
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // Read from window.location to stay in sync with pushState/popstate
+  const currentParams =
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search) : searchParams;
+  const fileParam = currentParams.get("file");
+  const hideHeader = currentParams.has("noheader");
+  const hideFooter = currentParams.has("nofooter");
+  const monoMode = currentParams.has("mono");
 
   const activeFilename = fileParam && filenames.includes(fileParam) ? fileParam : filenames[0];
   const activeData = fileData.find((f) => f.filename === activeFilename) || fileData[0];

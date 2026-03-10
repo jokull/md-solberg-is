@@ -6,6 +6,7 @@
   "main": "./worker/index.ts",
   "vars": {
     "SITE_URL": "https://md.solberg.is",
+    "GIST_USERNAME": "jokull",
   },
   "routes": [{ "pattern": "md.solberg.is", "custom_domain": true }],
   "assets": {

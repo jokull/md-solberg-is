@@ -5,7 +5,9 @@ import Link from "next/link";
 
 export const revalidate = 3600;
 
-const USERNAME = "jokull";
+function getUsername(): string {
+  return process.env.GIST_USERNAME || "jokull";
+}
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -50,9 +52,10 @@ function GistCard({ gist }: { gist: GistSummary }) {
 }
 
 export default async function Home() {
-  const [gists, user] = await Promise.all([fetchUserGists(USERNAME, 1, 100), fetchUser(USERNAME)]);
+  const username = getUsername();
+  const [gists, user] = await Promise.all([fetchUserGists(username, 1, 100), fetchUser(username)]);
 
-  const displayName = user?.name || USERNAME;
+  const displayName = user?.name || username;
 
   return (
     <main className="min-h-screen flex items-start justify-center px-5 sm:px-6 lg:px-8 py-12 sm:py-24">

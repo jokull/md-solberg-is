@@ -206,11 +206,6 @@ export function isCSV(filename: string): boolean {
   return CSV_EXTENSIONS.has(ext);
 }
 
-export function isTSV(filename: string): boolean {
-  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
-  return ext === "tsv";
-}
-
 export function isYAML(filename: string): boolean {
   const ext = filename.split(".").pop()?.toLowerCase() ?? "";
   return YAML_EXTENSIONS.has(ext);
