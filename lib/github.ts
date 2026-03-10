@@ -1,15 +1,29 @@
-export interface GistFile {
+export interface GistFileSummary {
   filename: string;
   type: string;
   language: string | null;
   raw_url: string;
   size: number;
+}
+
+export interface GistFile extends GistFileSummary {
   content: string;
 }
 
 export interface GistOwner {
   login: string;
   avatar_url: string;
+  html_url: string;
+}
+
+export interface GistSummary {
+  id: string;
+  description: string | null;
+  public: boolean;
+  files: Record<string, GistFileSummary>;
+  owner: GistOwner | null;
+  created_at: string;
+  updated_at: string;
   html_url: string;
 }
 
@@ -102,6 +116,24 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
   }
 
   return res.json();
+}
+
+export async function fetchUserGists(
+  username: string,
+  page = 1,
+  perPage = 30,
+): Promise<GistSummary[]> {
+  if (!isValidUsername(username)) return [];
+
+  const res = await fetch(
+    `https://api.github.com/users/${username}/gists?per_page=${perPage}&page=${page}`,
+    { headers: getGitHubHeaders(), cache: "no-store" },
+  );
+
+  if (!res.ok) return [];
+
+  const gists: GistSummary[] = await res.json();
+  return gists.filter((g) => g.public);
 }
 
 const MARKDOWN_EXTENSIONS = new Set(["md", "markdown", "mdx"]);
