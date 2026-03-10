@@ -2,7 +2,7 @@
 
 ## What is this project?
 
-A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gists.sh` in any URL to get clean typography, syntax highlighting, and a distraction-free reading experience.
+A self-hosted, single-user gist viewer for jokull's GitHub Gists. URLs are `md.solberg.is/<gistId>` with no username prefix needed. Clean typography, syntax highlighting, and a distraction-free reading experience.
 
 ## Tech Stack
 
@@ -28,7 +28,7 @@ bun run deploy  # build + wrangler deploy to Cloudflare Workers
 
 ## Project Structure
 
-- `app/[user]/[gistId]/` — main gist viewer route
+- `app/[gistId]/` — main gist viewer route (username hardcoded to "jokull")
 - `app/api/` — API routes (raw content proxy)
 - `components/` — shared UI components
 - `lib/` — utilities (GitHub API client, shiki, etc.)

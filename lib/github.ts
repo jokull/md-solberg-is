@@ -63,18 +63,95 @@ function getGitHubHeaders(): Record<string, string> {
   return headers;
 }
 
+// KV-backed GitHub API cache with ETag support.
+// On cache hit, sends If-None-Match to GitHub. A 304 means the cached
+// data is still fresh (and doesn't count against rate limits).
+//
+// Uses cloudflare:workers to access KV bindings directly in server
+// components — no need to pass bindings through the worker entry.
+
+// Cache GitHub API responses using the Cloudflare Cache API with ETags.
+// On cache hit, sends If-None-Match; a 304 means data is fresh (free).
+// Falls back to direct fetch when Cache API isn't available (dev).
+
+async function cachedFetch<T>(
+  url: string,
+): Promise<T | null> {
+  const headers = getGitHubHeaders();
+
+  // Try CF Cache API for stored response
+  let cache: Cache | null = null;
+  let cachedResponse: Response | undefined;
+  try {
+    cache = caches.default;
+    cachedResponse = await cache.match(url);
+  } catch {
+    // Cache API not available (dev mode)
+  }
+
+  // Extract ETag from cached response for conditional request
+  if (cachedResponse) {
+    const etag = cachedResponse.headers.get("x-gh-etag");
+    if (etag) {
+      headers["If-None-Match"] = etag;
+    }
+  }
+
+  const res = await fetch(url, { headers, cache: "no-store" });
+
+  // 304 Not Modified: cached data is still fresh
+  if (res.status === 304 && cachedResponse) {
+    return cachedResponse.json() as Promise<T>;
+  }
+
+  if (res.status === 404) return null;
+
+  if (res.status === 403) {
+    const remaining = res.headers.get("x-ratelimit-remaining");
+    if (remaining === "0") {
+      if (cachedResponse) return cachedResponse.json() as Promise<T>;
+      throw new Error(
+        "GitHub API rate limit exceeded. Please try again later.",
+      );
+    }
+  }
+
+  if (!res.ok) {
+    if (cachedResponse) return cachedResponse.json() as Promise<T>;
+    throw new Error(`GitHub API error: ${res.status}`);
+  }
+
+  const data = await res.json();
+
+  // Store in CF Cache with the GitHub ETag for future conditional requests
+  if (cache) {
+    const etag = res.headers.get("etag");
+    const cacheHeaders = new Headers({
+      "Content-Type": "application/json",
+      "Cache-Control": "public, max-age=86400",
+    });
+    if (etag) cacheHeaders.set("x-gh-etag", etag);
+
+    const cacheResponse = new Response(JSON.stringify(data), {
+      headers: cacheHeaders,
+    });
+    try {
+      cache.put(url, cacheResponse);
+    } catch {
+      // Cache put failure is non-fatal
+    }
+  }
+
+  return data as T;
+}
+
 export async function fetchUser(username: string): Promise<GitHubUser | null> {
   if (!isValidUsername(username)) return null;
 
   try {
-    const res = await fetch(`https://api.github.com/users/${username}`, {
-      headers: getGitHubHeaders(),
-      cache: "no-store",
-    });
-
-    if (!res.ok) return null;
-
-    return res.json();
+    return await cachedFetch<GitHubUser>(
+      `https://api.github.com/users/${username}`,
+    );
   } catch {
     return null;
   }
@@ -96,26 +173,9 @@ export function isValidUsername(username: string): boolean {
 export async function fetchGist(gistId: string): Promise<Gist | null> {
   if (!isValidGistId(gistId)) return null;
 
-  const res = await fetch(`https://api.github.com/gists/${gistId}`, {
-    headers: getGitHubHeaders(),
-  });
-
-  if (res.status === 404) return null;
-
-  if (res.status === 403) {
-    const remaining = res.headers.get("x-ratelimit-remaining");
-    if (remaining === "0") {
-      throw new Error(
-        "GitHub API rate limit exceeded. Please try again later.",
-      );
-    }
-  }
-
-  if (!res.ok) {
-    throw new Error(`GitHub API error: ${res.status}`);
-  }
-
-  return res.json();
+  return cachedFetch<Gist>(
+    `https://api.github.com/gists/${gistId}`,
+  );
 }
 
 export async function fetchUserGists(
@@ -125,15 +185,15 @@ export async function fetchUserGists(
 ): Promise<GistSummary[]> {
   if (!isValidUsername(username)) return [];
 
-  const res = await fetch(
-    `https://api.github.com/users/${username}/gists?per_page=${perPage}&page=${page}`,
-    { headers: getGitHubHeaders(), cache: "no-store" },
-  );
-
-  if (!res.ok) return [];
-
-  const gists: GistSummary[] = await res.json();
-  return gists.filter((g) => g.public);
+  try {
+    const gists = await cachedFetch<GistSummary[]>(
+      `https://api.github.com/users/${username}/gists?per_page=${perPage}&page=${page}`,
+    );
+    if (!gists) return [];
+    return gists.filter((g) => g.public);
+  } catch {
+    return [];
+  }
 }
 
 const MARKDOWN_EXTENSIONS = new Set(["md", "markdown", "mdx"]);
