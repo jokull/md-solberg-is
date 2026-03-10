@@ -1,5 +1,39 @@
 import { getFileExtension } from "@/lib/github";
-import { codeToHtml } from "shiki";
+import { createHighlighter } from "shiki";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
+
+const highlighter = createHighlighter({
+	themes: ["github-light", "github-dark"],
+	langs: [
+		"javascript",
+		"typescript",
+		"jsx",
+		"tsx",
+		"python",
+		"ruby",
+		"rust",
+		"go",
+		"bash",
+		"yaml",
+		"markdown",
+		"json",
+		"html",
+		"css",
+		"sql",
+		"toml",
+		"xml",
+		"kotlin",
+		"swift",
+		"java",
+		"c",
+		"cpp",
+		"csharp",
+		"objective-c",
+		"batch",
+		"text",
+	],
+	engine: createJavaScriptRegexEngine(),
+});
 
 // Map file extensions to Shiki language identifiers
 export function getShikiLang(filename: string, language: string | null): string {
@@ -50,8 +84,9 @@ export async function highlightCode(
   code: string,
   lang: string,
 ): Promise<string> {
+  const hl = await highlighter;
   try {
-    return await codeToHtml(code, {
+    return hl.codeToHtml(code, {
       lang: lang || "text",
       themes: {
         light: "github-light",
@@ -60,7 +95,7 @@ export async function highlightCode(
     });
   } catch {
     // Fallback for unsupported languages
-    return await codeToHtml(code, {
+    return hl.codeToHtml(code, {
       lang: "text",
       themes: {
         light: "github-light",

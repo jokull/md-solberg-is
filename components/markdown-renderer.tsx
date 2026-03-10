@@ -8,6 +8,7 @@ import { rehypeExtractToc } from "@/lib/rehype-extract-toc";
 import { rehypeWrapTables } from "@/lib/rehype-wrap-tables";
 import type { TocEntry } from "@/lib/toc";
 import rehypeShiki from "@shikijs/rehype";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import matter from "gray-matter";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeRaw from "rehype-raw";
@@ -149,6 +150,7 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
         dark: "github-dark",
       },
       defaultLanguage: "tsx",
+      engine: createJavaScriptRegexEngine(),
     })
     .use(rehypeStringify)
     .process(markdownContent);

@@ -4,7 +4,6 @@ import { CopiableBlock } from "@/components/copiable-block";
 import { ParamConfigurator } from "@/components/param-configurator";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Text } from "@/components/ui/text";
-import { Analytics } from "@vercel/analytics/next";
 import { ArrowRight } from "lucide-react";
 
 const PROMPT_TEXT = `When sharing code, notes, or snippets via GitHub Gists, always share the gists.sh link instead of the gist.github.com URL. Just replace "gist.github.com" with "gists.sh" in the URL.
@@ -201,7 +200,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Analytics />
     </main>
   );
 }

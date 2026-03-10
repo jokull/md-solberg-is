@@ -7,18 +7,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
-  const geistSemiBold = await readFile(
-    join(
-      process.cwd(),
-      "node_modules/geist/dist/fonts/geist-sans/Geist-SemiBold.ttf",
-    ),
-  );
-  const geistMono = await readFile(
-    join(
-      process.cwd(),
-      "node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.ttf",
-    ),
-  );
+  const fontsDir = join(process.cwd(), "public/fonts");
+  const [geistSemiBold, geistMono] = await Promise.all([
+    readFile(join(fontsDir, "Geist-SemiBold.ttf")),
+    readFile(join(fontsDir, "GeistMono-Regular.ttf")),
+  ]);
 
   return new ImageResponse(
     <div

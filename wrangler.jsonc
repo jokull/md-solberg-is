@@ -1,0 +1,15 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "gists-sh",
+	"compatibility_date": "2026-02-28",
+	"compatibility_flags": ["nodejs_compat"],
+	"main": "./worker/index.ts",
+	"vars": {
+		"SITE_URL": "https://gists.sh"
+	},
+	"routes": [{ "pattern": "gists.sh", "custom_domain": true }],
+	"assets": {
+		"not_found_handling": "none",
+		"directory": "dist/client"
+	}
+}

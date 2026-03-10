@@ -53,7 +53,7 @@ export async function fetchUser(username: string): Promise<GitHubUser | null> {
   try {
     const res = await fetch(`https://api.github.com/users/${username}`, {
       headers: getGitHubHeaders(),
-      next: { revalidate: 86400 },
+      cache: "no-store",
     });
 
     if (!res.ok) return null;
@@ -83,8 +83,7 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
 
   const res = await fetch(`https://api.github.com/gists/${gistId}`, {
     headers: getGitHubHeaders(),
-    // Tag enables on-demand purge via POST /{user}/{gistId}/refresh
-    next: { revalidate: 86400, tags: [`gist-${gistId}`] },
+    cache: "no-store",
   });
 
   if (res.status === 404) return null;
