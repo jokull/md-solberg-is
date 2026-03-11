@@ -1,17 +1,6 @@
 import { Providers } from "@/components/providers";
-import localFont from "next/font/local";
 import type { Metadata } from "next";
 import "./globals.css";
-
-const GeistSans = localFont({
-  src: "./_fonts/GeistVariable.woff2",
-  variable: "--font-geist-sans",
-});
-
-const GeistMono = localFont({
-  src: "./_fonts/GeistMonoVariable.woff2",
-  variable: "--font-geist-mono",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gists.sh"),
@@ -96,7 +85,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      className=""
     >
       <head>
         <style dangerouslySetInnerHTML={{ __html: themePrepaintStyle }} />
