@@ -10,6 +10,11 @@
  */
 import handler from "vinext/server/app-router-entry";
 
+// Cache-busting version, updated at build time by Vite's define plugin.
+// Each deploy gets a fresh cache namespace so stale HTML is never served.
+declare const __DEPLOY_VERSION__: string;
+const DEPLOY_VERSION = typeof __DEPLOY_VERSION__ !== "undefined" ? __DEPLOY_VERSION__ : "dev";
+
 interface Env {
   [key: string]: unknown;
 }
@@ -36,8 +41,10 @@ export default {
       return handler.fetch(request);
     }
 
-    // Use a simplified cache key (URL only, no Vary)
-    const cacheKey = new Request(request.url, { method: "GET" });
+    // Use a versioned cache key so each deploy gets a fresh cache
+    const url = new URL(request.url);
+    url.searchParams.set("__v", DEPLOY_VERSION);
+    const cacheKey = new Request(url.toString(), { method: "GET" });
     const cache = caches.default;
     const cached = await cache.match(cacheKey);
 

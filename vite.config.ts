@@ -4,6 +4,9 @@ import vinext from "vinext";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  define: {
+    __DEPLOY_VERSION__: JSON.stringify(Date.now().toString(36)),
+  },
   plugins: [
     vinext(),
     tailwindcss(),

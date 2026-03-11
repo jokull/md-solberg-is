@@ -3,7 +3,7 @@ import { fetchUser, fetchUserGists } from "@/lib/github";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 function getUsername(): string {
   return process.env.GIST_USERNAME || "jokull";

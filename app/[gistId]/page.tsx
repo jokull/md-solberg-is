@@ -28,7 +28,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 function ContentLoader() {
   return (
