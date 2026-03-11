@@ -39,7 +39,7 @@ function ContentLoader() {
 }
 
 function getUsername(): string {
-  return process.env.GIST_getUsername() || "jokull";
+  return process.env.GIST_USERNAME || "jokull";
 }
 
 interface PageProps {
