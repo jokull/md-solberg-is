@@ -1,13 +1,25 @@
-# gists.sh
+# md.solberg.is
 
-A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gists.sh` in any gist URL. That's it.
+A minimal, beautiful viewer for GitHub Gists, tailored for my own single-user setup. It renders my gists at `md.solberg.is/<gistId>` with clean typography, syntax highlighting, and a much nicer reading experience than the default GitHub gist UI.
 
-**[gists.sh](https://gists.sh)**
+**[md.solberg.is](https://md.solberg.is)**
+
+## What this is
+
+This project started as a fork of [`linuz90/gists.sh`](https://github.com/linuz90/gists.sh), then evolved into a personal deployment with a different URL structure, Cloudflare setup, and agent-centric sharing workflow.
+
+In this version:
+
+- the site is deployed at `md.solberg.is`
+- it is configured for a single user (`jokull`)
+- gist URLs use `/<gistId>` with no username prefix
+- it includes a local skill for creating and sharing nicely rendered gist links from coding agents
+- it is set up for Cloudflare Workers deployment via Wrangler and vinext
 
 ## Usage
 
 ```
-gist.github.com/user/abc123  →  gists.sh/user/abc123
+md.solberg.is/<gistId>
 ```
 
 Every file type gets the best possible rendering:
@@ -19,7 +31,7 @@ Every file type gets the best possible rendering:
 - **CSV / TSV** - sortable, searchable data table
 - **ICS / iCal** - calendar event cards with dates, locations, and recurrence
 
-Multi-file gists get tabs. Toggle between "Pretty" and "Raw" views on structured files. Everything looks clean.
+Multi-file gists get tabs. Toggle between "Pretty" and "Raw" views on structured files.
 
 ### URL parameters
 
@@ -34,39 +46,50 @@ Customize how any gist renders by appending query params:
 | `?mono`            | Monospace font for all text                |
 | `?file={filename}` | Show a specific file from multi-file gists |
 
-Combine them: `gists.sh/user/abc123?theme=dark&noheader&nofooter`
+Combine them: `md.solberg.is/<gistId>?theme=dark&noheader&nofooter`
 
 ### Raw content
 
 Fetch raw file content with proper `Content-Type` headers via the API:
 
 ```
-gists.sh/api/raw/{gist_id}
-gists.sh/api/raw/{gist_id}?file={filename}
+md.solberg.is/api/raw/{gist_id}
+md.solberg.is/api/raw/{gist_id}?file={filename}
 ```
 
-## Agent skill
+## Agent workflow
 
-Teach your coding agent to use gists.sh links whenever it creates or shares gists. Works with Claude Code, Codex, Cursor, and any agent that supports [skills](https://skills.sh).
+This repo also contains a local agent skill for turning generated content into shareable gist links with a clean reading experience.
 
-```bash
-npx skills add linuz90/gists.sh
-```
+See:
+
+- `skills/share-pretty-gist/SKILL.md`
+
+The intended flow is:
+
+1. an agent creates or updates a gist with `gh gist`
+2. it warms the rendered page
+3. it returns `md.solberg.is/<gistId>` as the primary share link
+
+This works especially well for markdown notes, instructions, reports, and code snippets that should be shared as artifacts rather than pasted from chat.
 
 ## Self-hosting
 
 ```bash
-pnpm install
-cp .env.local.example .env.local  # add your GITHUB_TOKEN
-pnpm dev
+bun install
+bun dev
+bun run build
+bun run deploy
 ```
 
-A [GitHub personal access token](https://github.com/settings/tokens) with the `gist` scope raises your API rate limit from 60 to 5,000 requests/hour. Note: the `gist` scope grants read access to all gists on the account, including secret ones. If that's a concern, use a token from a dedicated account with no sensitive gists.
+Set a `GITHUB_TOKEN` with gist access for higher API rate limits. In my deployment, this is stored as a Cloudflare Workers secret.
 
 ## Stack
 
 Next.js 16 (via vinext), Tailwind CSS v4, react-markdown, Shiki, deployed on Cloudflare Workers.
 
-## Author
+## Credit
 
-Built by [Fabrizio Rinaldi](https://fabrizio.so) ([@linuz90](https://x.com/linuz90)).
+This project is based on the excellent original work in [`linuz90/gists.sh`](https://github.com/linuz90/gists.sh) by [Fabrizio Rinaldi](https://fabrizio.so).
+
+That project established the core idea and a lot of the original implementation. This repo is my personal adaptation of it for `md.solberg.is`, single-user routing, and agent-oriented sharing workflows.
