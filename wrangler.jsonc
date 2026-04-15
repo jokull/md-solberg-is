@@ -8,6 +8,12 @@
     "SITE_URL": "https://md.solberg.is",
     "GIST_USERNAME": "jokull",
   },
+  "kv_namespaces": [
+    {
+      "binding": "TOKEN_KV",
+      "id": "c865619d32c149aaa85829a4ad24c7be",
+    },
+  ],
   "routes": [{ "pattern": "md.solberg.is", "custom_domain": true }],
   "assets": {
     "not_found_handling": "none",

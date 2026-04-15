@@ -49,13 +49,15 @@ export interface GitHubUser {
   location: string | null;
 }
 
-function getGitHubHeaders(): Record<string, string> {
+import { getToken } from "./token-store";
+
+async function getGitHubHeaders(): Promise<Record<string, string>> {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",
     "User-Agent": "gists-sh",
   };
 
-  const token = process.env.GITHUB_TOKEN;
+  const token = await getToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -68,7 +70,7 @@ function getGitHubHeaders(): Record<string, string> {
 // Falls back to direct fetch when Cache API isn't available (dev).
 
 async function cachedFetch<T>(url: string): Promise<T | null> {
-  const headers = getGitHubHeaders();
+  const headers = await getGitHubHeaders();
 
   // Try CF Cache API for stored response
   let cache: Cache | null = null;
